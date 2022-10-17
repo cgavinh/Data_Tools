@@ -88,3 +88,25 @@ class simple_box:
         check_hue = widgets.Checkbox(False, description='By Hue?')"""
 
         self.w = interactive(self.draw_bar, column=dd)
+
+
+# import math
+# import pandas as df
+# import numpy as np
+# https://napsterinblue.github.io/notes/python/viz/subplots/
+# https://www.python-graph-gallery.com/scatterplot-with-regression-fit-in-matplotlib
+def plot_linearity(df, y):
+    num_df = df.select_dtypes(include='number').drop(columns=y)
+    n_cols = len(num_df.columns)
+
+    fig, axes = plt.subplots(math.ceil(n_cols / 4), 4, figsize=(16, 8))
+    for idx, (col, ax) in enumerate(zip(num_df.columns, axes.flatten())):
+        ax.scatter(num_df[col], df[y])
+        ax.set_title(col)
+        b, a = np.polyfit(num_df[col], df[y], deg=1)
+        fit_x = np.linspace(num_df[col].min(), num_df[col].max(), 100)
+        ax.plot(fit_x, a + b * fit_x, color="k", lw=2.5);
+        plt.subplots_adjust(wspace=.5, hspace=.5)
+
+    else:
+        [ax.set_visible(False) for ax in axes.flatten()[idx + 1:]]
